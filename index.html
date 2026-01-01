@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EVM Address Viewer</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+        <style>
+            :root {
+                --electric-cyan: #00f0ff;
+                --deep-blue: #0a1628;
+                --surface-blue: #132038;
+                --glow-cyan: rgba(0, 240, 255, 0.5);
+                --accent-purple: #a855f7;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Rajdhani", sans-serif;
+                background: var(--deep-blue);
+                color: #e0f2fe;
+                position: relative;
+                overflow-x: hidden;
+            }
+
+            /* Animated background grid */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 200%;
+                height: 200%;
+                background-image:
+                    linear-gradient(
+                        rgba(0, 240, 255, 0.03) 2px,
+                        transparent 2px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(0, 240, 255, 0.03) 2px,
+                        transparent 2px
+                    );
+                background-size: 50px 50px;
+                animation: gridMove 20s linear infinite;
+                pointer-events: none;
+            }
+
+            @keyframes gridMove {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(50px, 50px);
+                }
+            }
+
+            /* Main container architecture */
+            .main-container {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 3rem 2rem;
+                position: relative;
+                z-index: 10;
+            }
+
+            @media (min-width: 1024px) {
+                .main-container {
+                    grid-template-columns: 400px 1fr;
+                    gap: 3rem;
+                }
+            }
+
+            /* Header panel - distinct geometric shape */
+            .header-panel {
+                background: linear-gradient(
+                    135deg,
+                    rgba(19, 32, 56, 0.95),
+                    rgba(19, 32, 56, 0.85)
+                );
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(0, 240, 255, 0.2);
+                clip-path: polygon(
+                    0 0,
+                    100% 0,
+                    100% calc(100% - 20px),
+                    calc(100% - 20px) 100%,
+                    0 100%
+                );
+                padding: 3rem 2rem;
+                position: relative;
+                box-shadow:
+                    0 8px 32px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+
+            .header-panel::before {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 20px;
+                height: 20px;
+                background: var(--electric-cyan);
+                clip-path: polygon(100% 0, 100% 100%, 0 100%);
+                box-shadow: 0 0 20px var(--glow-cyan);
+            }
+
+            /* Title styling */
+            .cyber-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                letter-spacing: 0.05em;
+                background: linear-gradient(135deg, #00f0ff 0%, #a855f7 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 1rem;
+                line-height: 1.2;
+            }
+
+            /* Input container - hexagonal feel */
+            .input-container {
+                background: linear-gradient(
+                    135deg,
+                    rgba(10, 22, 40, 0.9),
+                    rgba(19, 32, 56, 0.9)
+                );
+                border: 1px solid rgba(0, 240, 255, 0.3);
+                border-left: 4px solid var(--electric-cyan);
+                padding: 2rem;
+                margin-top: 2rem;
+                position: relative;
+                box-shadow:
+                    -4px 0 20px rgba(0, 240, 255, 0.2),
+                    0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+
+            .input-container::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -4px;
+                width: 4px;
+                height: 40%;
+                background: linear-gradient(
+                    180deg,
+                    var(--electric-cyan),
+                    var(--accent-purple)
+                );
+                animation: borderPulse 2s ease-in-out infinite;
+            }
+
+            @keyframes borderPulse {
+                0%,
+                100% {
+                    height: 40%;
+                    opacity: 1;
+                }
+                50% {
+                    height: 60%;
+                    opacity: 0.6;
+                }
+            }
+
+            /* Results panel - distinct container */
+            .results-container {
+                background: linear-gradient(
+                    135deg,
+                    rgba(19, 32, 56, 0.6),
+                    rgba(19, 32, 56, 0.4)
+                );
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(0, 240, 255, 0.15);
+                border-radius: 0;
+                clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
+                padding: 2rem;
+                min-height: 600px;
+                position: relative;
+            }
+
+            .results-container::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 20px;
+                height: 20px;
+                background: var(--accent-purple);
+                clip-path: polygon(0 0, 100% 100%, 0 100%);
+                box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            }
+
+            .results-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            }
+
+            /* Address cards - clean rectangular modules */
+            .address-module {
+                background: linear-gradient(
+                    90deg,
+                    rgba(19, 32, 56, 0.8),
+                    rgba(19, 32, 56, 0.6)
+                );
+                border: 1px solid rgba(0, 240, 255, 0.2);
+                border-left: 3px solid transparent;
+                padding: 1.25rem 1.5rem;
+                margin-bottom: 0.75rem;
+                display: grid;
+                grid-template-columns: 40px 1fr auto;
+                gap: 1rem;
+                align-items: center;
+                opacity: 0;
+                transform: translateX(-20px);
+                animation: slideIn 0.4s ease forwards;
+                transition: all 0.3s ease;
+            }
+
+            .address-module:hover {
+                background: linear-gradient(
+                    90deg,
+                    rgba(19, 32, 56, 0.95),
+                    rgba(19, 32, 56, 0.85)
+                );
+                border-left-color: var(--electric-cyan);
+                box-shadow:
+                    -3px 0 15px rgba(0, 240, 255, 0.3),
+                    0 4px 20px rgba(0, 0, 0, 0.4);
+                transform: translateX(4px);
+            }
+
+            @keyframes slideIn {
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            /* Index badge - circular */
+            .index-badge {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: linear-gradient(
+                    135deg,
+                    rgba(0, 240, 255, 0.2),
+                    rgba(168, 85, 247, 0.2)
+                );
+                border: 2px solid rgba(0, 240, 255, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 0.875rem;
+                color: var(--electric-cyan);
+                flex-shrink: 0;
+            }
+
+            /* Address text container */
+            .address-text {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.875rem;
+                letter-spacing: 0.02em;
+                word-break: break-all;
+                color: #cbd5e1;
+            }
+
+            /* Action buttons group - pill shaped */
+            .action-group {
+                display: flex;
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .action-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(0, 240, 255, 0.1);
+                border: 1px solid rgba(0, 240, 255, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--electric-cyan);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .action-btn::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle,
+                    var(--glow-cyan),
+                    transparent
+                );
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .action-btn:hover::before {
+                opacity: 1;
+            }
+
+            .action-btn:hover {
+                border-color: var(--electric-cyan);
+                box-shadow: 0 0 15px var(--glow-cyan);
+                transform: scale(1.1);
+            }
+
+            /* Submit button - bold rectangular */
+            .submit-btn {
+                width: 100%;
+                padding: 1rem 2rem;
+                background: linear-gradient(
+                    135deg,
+                    rgba(0, 240, 255, 0.2),
+                    rgba(168, 85, 247, 0.2)
+                );
+                border: 2px solid var(--electric-cyan);
+                color: var(--electric-cyan);
+                font-weight: 700;
+                font-size: 0.875rem;
+                letter-spacing: 0.15em;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                clip-path: polygon(
+                    0 0,
+                    calc(100% - 12px) 0,
+                    100% 12px,
+                    100% 100%,
+                    12px 100%,
+                    0 calc(100% - 12px)
+                );
+            }
+
+            .submit-btn::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: radial-gradient(
+                    circle,
+                    var(--glow-cyan),
+                    transparent
+                );
+                transform: translate(-50%, -50%);
+                transition:
+                    width 0.6s,
+                    height 0.6s;
+            }
+
+            .submit-btn:hover::before {
+                width: 400px;
+                height: 400px;
+            }
+
+            .submit-btn:hover {
+                box-shadow: 0 0 30px var(--glow-cyan);
+                transform: translateY(-2px);
+            }
+
+            .submit-btn span {
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Input field */
+            textarea {
+                width: 100%;
+                padding: 1rem;
+                background: rgba(10, 22, 40, 0.8);
+                border: 1px solid rgba(0, 240, 255, 0.3);
+                color: #e0f2fe;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.875rem;
+                resize: none;
+                transition: all 0.3s;
+            }
+
+            textarea:focus {
+                outline: none;
+                border-color: var(--electric-cyan);
+                box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+                background: rgba(10, 22, 40, 0.95);
+            }
+
+            textarea::placeholder {
+                color: rgba(224, 242, 254, 0.3);
+            }
+
+            /* Message notification - top banner style */
+            .message-banner {
+                background: linear-gradient(
+                    90deg,
+                    rgba(0, 240, 255, 0.15),
+                    rgba(168, 85, 247, 0.15)
+                );
+                border: 1px solid rgba(0, 240, 255, 0.4);
+                border-left: 4px solid var(--electric-cyan);
+                padding: 1rem 1.5rem;
+                margin-bottom: 1.5rem;
+                font-size: 0.875rem;
+                letter-spacing: 0.05em;
+                animation: slideInTop 0.4s ease;
+            }
+
+            @keyframes slideInTop {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Label styling */
+            .input-label {
+                display: block;
+                font-size: 0.75rem;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--electric-cyan);
+                margin-bottom: 0.75rem;
+            }
+
+            /* Warning text */
+            .warning-text {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.75rem;
+                color: rgba(224, 242, 254, 0.5);
+                margin-top: 0.75rem;
+            }
+
+            /* Staggered animations */
+            .address-module:nth-child(1) {
+                animation-delay: 0.05s;
+            }
+            .address-module:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+            .address-module:nth-child(3) {
+                animation-delay: 0.15s;
+            }
+            .address-module:nth-child(4) {
+                animation-delay: 0.2s;
+            }
+            .address-module:nth-child(5) {
+                animation-delay: 0.25s;
+            }
+            .address-module:nth-child(6) {
+                animation-delay: 0.3s;
+            }
+            .address-module:nth-child(7) {
+                animation-delay: 0.35s;
+            }
+            .address-module:nth-child(8) {
+                animation-delay: 0.4s;
+            }
+            .address-module:nth-child(9) {
+                animation-delay: 0.45s;
+            }
+            .address-module:nth-child(10) {
+                animation-delay: 0.5s;
+            }
+
+            /* Stats display */
+            .stats-item {
+                font-size: 0.75rem;
+                color: rgba(224, 242, 254, 0.6);
+                letter-spacing: 0.05em;
+            }
+
+            .stats-value {
+                font-weight: 700;
+                color: var(--electric-cyan);
+            }
+
+            /* Fade in animations */
+            .fade-in {
+                animation: fadeIn 0.8s ease forwards;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        </style>
+    </head>
+    <body x-data="addressViewer()">
+        <div class="main-container">
+            <!-- Left Panel: Header & Input -->
+            <div class="fade-in">
+                <!-- Header Panel -->
+                <div class="header-panel">
+                    <h1 class="cyber-title">EVM<br />ADDRESS<br />VIEWER</h1>
+                    <p class="text-sm tracking-wider opacity-70 font-light">
+                        Derive Ethereum addresses from BIP39 seed phrases
+                    </p>
+                </div>
+
+                <!-- Input Container -->
+                <div class="input-container">
+                    <div
+                        x-show="message.text"
+                        x-text="message.text"
+                        class="message-banner"
+                        x-transition
+                    ></div>
+
+                    <form @submit.prevent="generateAddresses" class="space-y-6">
+                        <div>
+                            <label class="input-label"> Seed Phrase </label>
+                            <textarea
+                                x-model="seedPhrase"
+                                rows="4"
+                                placeholder="Enter your 12 or 24 word mnemonic..."
+                                required
+                            ></textarea>
+                            <div class="warning-text">
+                                <svg
+                                    class="w-4 h-4 flex-shrink-0"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span
+                                    >Never share your seed phrase with untrusted
+                                    applications</span
+                                >
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span>GENERATE ADDRESSES</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div
+                class="results-container fade-in"
+                style="animation-delay: 0.2s"
+            >
+                <div class="results-header">
+                    <h2 class="text-xl font-bold tracking-wide">
+                        DERIVED ADDRESSES
+                    </h2>
+                    <div class="stats-item" x-show="addresses.length > 0">
+                        <span
+                            class="stats-value"
+                            x-text="addresses.length"
+                        ></span>
+                        / 10
+                    </div>
+                </div>
+
+                <div>
+                    <template x-for="(addr, index) in addresses" :key="index">
+                        <div class="address-module">
+                            <div
+                                class="index-badge"
+                                x-text="String(index).padStart(2, '0')"
+                            ></div>
+
+                            <div
+                                class="address-text"
+                                x-text="addr.address"
+                            ></div>
+
+                            <div class="action-group">
+                                <button
+                                    type="button"
+                                    @click="copyAddress(addr.address)"
+                                    class="action-btn"
+                                    title="Copy address"
+                                >
+                                    <svg
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                </button>
+                                <a
+                                    :href="'https://blockscan.com/address/' + addr.address"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="action-btn"
+                                    title="View on Blockscan"
+                                >
+                                    <svg
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                        />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div
+                    x-show="addresses.length === 0"
+                    class="text-center py-20 opacity-40"
+                >
+                    <svg
+                        class="w-16 h-16 mx-auto mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                    </svg>
+                    <p class="text-sm tracking-wide">
+                        No addresses generated yet
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.umd.min.js"></script>
+
+        <script>
+            function addressViewer() {
+                return {
+                    seedPhrase: "",
+                    addresses: [],
+                    message: { text: "", type: "success" },
+
+                    showMessage(text, type = "success") {
+                        this.message = { text, type };
+                        setTimeout(() => {
+                            this.message = { text: "", type: "success" };
+                        }, 4000);
+                    },
+
+                    async copyAddress(address) {
+                        try {
+                            await navigator.clipboard.writeText(address);
+                            this.showMessage("✓ Address copied to clipboard");
+                        } catch {
+                            this.showMessage(
+                                "✗ Clipboard access denied (HTTPS required)",
+                            );
+                        }
+                    },
+
+                    generateAddresses() {
+                        this.addresses = [];
+                        this.message = { text: "", type: "success" };
+
+                        const phrase = this.seedPhrase.trim();
+                        if (!phrase) {
+                            this.showMessage("✗ Please enter a seed phrase");
+                            return;
+                        }
+
+                        try {
+                            const mnemonic = ethers.Mnemonic.fromPhrase(phrase);
+                            const hdWallet = ethers.HDNodeWallet.fromMnemonic(
+                                mnemonic,
+                                "m/44'/60'/0'/0",
+                            );
+
+                            for (let i = 0; i < 10; i++) {
+                                // Derive child at index i
+                                const wallet = hdWallet.deriveChild(i);
+
+                                this.addresses.push({
+                                    address: wallet.address,
+                                    path: `m/44'/60'/0'/0/${i}`,
+                                });
+                            }
+
+                            this.showMessage(
+                                "✓ Successfully generated 10 addresses",
+                            );
+                        } catch (err) {
+                            console.error(err);
+                            this.showMessage(
+                                "✗ Invalid BIP39 mnemonic - please check your seed phrase",
+                            );
+                        }
+                    },
+                };
+            }
+        </script>
+    </body>
+</html>
