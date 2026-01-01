@@ -15,11 +15,12 @@
         ></script>
         <style>
             :root {
-                --electric-cyan: #00f0ff;
-                --deep-blue: #0a1628;
-                --surface-blue: #132038;
-                --glow-cyan: rgba(0, 240, 255, 0.5);
-                --accent-purple: #a855f7;
+                --trust-blue: #3b82f6;
+                --deep-navy: #0f172a;
+                --surface-slate: #1e293b;
+                --secure-green: #10b981;
+                --warning-amber: #f59e0b;
+                --lock-gray: #64748b;
             }
 
             * {
@@ -30,42 +31,32 @@
 
             body {
                 font-family: "Rajdhani", sans-serif;
-                background: var(--deep-blue);
-                color: #e0f2fe;
+                background: var(--deep-navy);
+                color: #e2e8f0;
                 position: relative;
                 overflow-x: hidden;
             }
 
-            /* Animated background grid */
+            /* Subtle background pattern */
             body::before {
                 content: "";
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 200%;
-                height: 200%;
+                width: 100%;
+                height: 100%;
                 background-image:
                     linear-gradient(
-                        rgba(0, 240, 255, 0.03) 2px,
-                        transparent 2px
+                        rgba(59, 130, 246, 0.02) 1px,
+                        transparent 1px
                     ),
                     linear-gradient(
                         90deg,
-                        rgba(0, 240, 255, 0.03) 2px,
-                        transparent 2px
+                        rgba(59, 130, 246, 0.02) 1px,
+                        transparent 1px
                     );
-                background-size: 50px 50px;
-                animation: gridMove 20s linear infinite;
+                background-size: 40px 40px;
                 pointer-events: none;
-            }
-
-            @keyframes gridMove {
-                0% {
-                    transform: translate(0, 0);
-                }
-                100% {
-                    transform: translate(50px, 50px);
-                }
             }
 
             /* Main container architecture */
@@ -87,47 +78,46 @@
                 }
             }
 
-            /* Header panel - distinct geometric shape */
+            /* Header panel - professional and trustworthy */
             .header-panel {
                 background: linear-gradient(
                     135deg,
-                    rgba(19, 32, 56, 0.95),
-                    rgba(19, 32, 56, 0.85)
+                    rgba(30, 41, 59, 0.95),
+                    rgba(30, 41, 59, 0.9)
                 );
                 backdrop-filter: blur(20px);
-                border: 1px solid rgba(0, 240, 255, 0.2);
-                clip-path: polygon(
-                    0 0,
-                    100% 0,
-                    100% calc(100% - 20px),
-                    calc(100% - 20px) 100%,
-                    0 100%
-                );
+                border: 2px solid rgba(59, 130, 246, 0.3);
+                border-radius: 12px;
                 padding: 3rem 2rem;
                 position: relative;
                 box-shadow:
-                    0 8px 32px rgba(0, 0, 0, 0.4),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                    0 10px 40px rgba(0, 0, 0, 0.5),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
             }
 
             .header-panel::before {
                 content: "";
                 position: absolute;
-                bottom: 0;
-                right: 0;
-                width: 20px;
-                height: 20px;
-                background: var(--electric-cyan);
-                clip-path: polygon(100% 0, 100% 100%, 0 100%);
-                box-shadow: 0 0 20px var(--glow-cyan);
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                background: linear-gradient(
+                    135deg,
+                    var(--trust-blue),
+                    var(--secure-green)
+                );
+                border-radius: 12px;
+                z-index: -1;
+                opacity: 0.1;
             }
 
-            /* Title styling */
+            /* Title styling - professional */
             .cyber-title {
                 font-size: 2.5rem;
                 font-weight: 700;
                 letter-spacing: 0.05em;
-                background: linear-gradient(135deg, #00f0ff 0%, #a855f7 100%);
+                background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -135,76 +125,61 @@
                 line-height: 1.2;
             }
 
-            /* Input container - hexagonal feel */
+            /* Security badge */
+            .security-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: rgba(16, 185, 129, 0.1);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                border-radius: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: var(--secure-green);
+                margin-top: 1rem;
+                letter-spacing: 0.05em;
+            }
+
+            /* Input container - secure feel */
             .input-container {
                 background: linear-gradient(
                     135deg,
-                    rgba(10, 22, 40, 0.9),
-                    rgba(19, 32, 56, 0.9)
+                    rgba(15, 23, 42, 0.95),
+                    rgba(30, 41, 59, 0.95)
                 );
-                border: 1px solid rgba(0, 240, 255, 0.3);
-                border-left: 4px solid var(--electric-cyan);
+                border: 2px solid rgba(100, 116, 139, 0.3);
+                border-radius: 12px;
                 padding: 2rem;
                 margin-top: 2rem;
                 position: relative;
                 box-shadow:
-                    -4px 0 20px rgba(0, 240, 255, 0.2),
-                    0 8px 32px rgba(0, 0, 0, 0.3);
+                    0 10px 40px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
             }
 
             .input-container::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: -4px;
-                width: 4px;
-                height: 40%;
-                background: linear-gradient(
-                    180deg,
-                    var(--electric-cyan),
-                    var(--accent-purple)
-                );
-                animation: borderPulse 2s ease-in-out infinite;
+                display: none;
             }
 
-            @keyframes borderPulse {
-                0%,
-                100% {
-                    height: 40%;
-                    opacity: 1;
-                }
-                50% {
-                    height: 60%;
-                    opacity: 0.6;
-                }
-            }
-
-            /* Results panel - distinct container */
+            /* Results panel - clean and secure */
             .results-container {
                 background: linear-gradient(
                     135deg,
-                    rgba(19, 32, 56, 0.6),
-                    rgba(19, 32, 56, 0.4)
+                    rgba(30, 41, 59, 0.7),
+                    rgba(30, 41, 59, 0.5)
                 );
                 backdrop-filter: blur(10px);
-                border: 1px solid rgba(0, 240, 255, 0.15);
-                border-radius: 0;
-                clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
+                border: 2px solid rgba(59, 130, 246, 0.2);
+                border-radius: 12px;
                 padding: 2rem;
                 min-height: 600px;
                 position: relative;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             }
 
             .results-container::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 20px;
-                height: 20px;
-                background: var(--accent-purple);
-                clip-path: polygon(0 0, 100% 100%, 0 100%);
-                box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+                display: none;
             }
 
             .results-header {
@@ -213,18 +188,18 @@
                 justify-content: space-between;
                 margin-bottom: 2rem;
                 padding-bottom: 1rem;
-                border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+                border-bottom: 2px solid rgba(59, 130, 246, 0.2);
             }
 
-            /* Address cards - clean rectangular modules */
+            /* Address cards - trustworthy design */
             .address-module {
                 background: linear-gradient(
                     90deg,
-                    rgba(19, 32, 56, 0.8),
-                    rgba(19, 32, 56, 0.6)
+                    rgba(30, 41, 59, 0.9),
+                    rgba(30, 41, 59, 0.7)
                 );
-                border: 1px solid rgba(0, 240, 255, 0.2);
-                border-left: 3px solid transparent;
+                border: 2px solid rgba(100, 116, 139, 0.3);
+                border-radius: 8px;
                 padding: 1.25rem 1.5rem;
                 margin-bottom: 0.75rem;
                 display: grid;
@@ -232,7 +207,7 @@
                 gap: 1rem;
                 align-items: center;
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateY(10px);
                 animation: slideIn 0.4s ease forwards;
                 transition: all 0.3s ease;
             }
@@ -240,40 +215,36 @@
             .address-module:hover {
                 background: linear-gradient(
                     90deg,
-                    rgba(19, 32, 56, 0.95),
-                    rgba(19, 32, 56, 0.85)
+                    rgba(30, 41, 59, 0.95),
+                    rgba(30, 41, 59, 0.85)
                 );
-                border-left-color: var(--electric-cyan);
+                border-color: var(--trust-blue);
                 box-shadow:
-                    -3px 0 15px rgba(0, 240, 255, 0.3),
-                    0 4px 20px rgba(0, 0, 0, 0.4);
-                transform: translateX(4px);
+                    0 0 0 1px var(--trust-blue),
+                    0 8px 24px rgba(0, 0, 0, 0.4);
+                transform: translateY(-2px);
             }
 
             @keyframes slideIn {
                 to {
                     opacity: 1;
-                    transform: translateX(0);
+                    transform: translateY(0);
                 }
             }
 
-            /* Index badge - circular */
+            /* Index badge - secure style */
             .index-badge {
                 width: 40px;
                 height: 40px;
-                border-radius: 50%;
-                background: linear-gradient(
-                    135deg,
-                    rgba(0, 240, 255, 0.2),
-                    rgba(168, 85, 247, 0.2)
-                );
-                border: 2px solid rgba(0, 240, 255, 0.4);
+                border-radius: 8px;
+                background: rgba(59, 130, 246, 0.15);
+                border: 2px solid rgba(59, 130, 246, 0.4);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-weight: 700;
                 font-size: 0.875rem;
-                color: var(--electric-cyan);
+                color: var(--trust-blue);
                 flex-shrink: 0;
             }
 
@@ -286,7 +257,7 @@
                 color: #cbd5e1;
             }
 
-            /* Action buttons group - pill shaped */
+            /* Action buttons group - professional */
             .action-group {
                 display: flex;
                 gap: 0.5rem;
@@ -296,97 +267,56 @@
             .action-btn {
                 width: 36px;
                 height: 36px;
-                border-radius: 50%;
-                background: rgba(0, 240, 255, 0.1);
-                border: 1px solid rgba(0, 240, 255, 0.3);
+                border-radius: 6px;
+                background: rgba(59, 130, 246, 0.1);
+                border: 1px solid rgba(59, 130, 246, 0.3);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: var(--electric-cyan);
+                color: var(--trust-blue);
                 cursor: pointer;
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
+                transition: all 0.2s ease;
             }
 
             .action-btn::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                border-radius: 50%;
-                background: radial-gradient(
-                    circle,
-                    var(--glow-cyan),
-                    transparent
-                );
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-
-            .action-btn:hover::before {
-                opacity: 1;
+                display: none;
             }
 
             .action-btn:hover {
-                border-color: var(--electric-cyan);
-                box-shadow: 0 0 15px var(--glow-cyan);
-                transform: scale(1.1);
+                background: rgba(59, 130, 246, 0.2);
+                border-color: var(--trust-blue);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+                transform: translateY(-1px);
             }
 
-            /* Submit button - bold rectangular */
+            /* Submit button - secure and trustworthy */
             .submit-btn {
                 width: 100%;
                 padding: 1rem 2rem;
-                background: linear-gradient(
-                    135deg,
-                    rgba(0, 240, 255, 0.2),
-                    rgba(168, 85, 247, 0.2)
-                );
-                border: 2px solid var(--electric-cyan);
-                color: var(--electric-cyan);
+                background: linear-gradient(135deg, var(--trust-blue), #2563eb);
+                border: none;
+                border-radius: 8px;
+                color: white;
                 font-weight: 700;
                 font-size: 0.875rem;
-                letter-spacing: 0.15em;
+                letter-spacing: 0.05em;
                 cursor: pointer;
-                position: relative;
-                overflow: hidden;
                 transition: all 0.3s ease;
-                clip-path: polygon(
-                    0 0,
-                    calc(100% - 12px) 0,
-                    100% 12px,
-                    100% 100%,
-                    12px 100%,
-                    0 calc(100% - 12px)
-                );
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
             }
 
             .submit-btn::before {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                background: radial-gradient(
-                    circle,
-                    var(--glow-cyan),
-                    transparent
-                );
-                transform: translate(-50%, -50%);
-                transition:
-                    width 0.6s,
-                    height 0.6s;
-            }
-
-            .submit-btn:hover::before {
-                width: 400px;
-                height: 400px;
+                display: none;
             }
 
             .submit-btn:hover {
-                box-shadow: 0 0 30px var(--glow-cyan);
+                background: linear-gradient(135deg, #2563eb, var(--trust-blue));
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
                 transform: translateY(-2px);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
             }
 
             .submit-btn span {
@@ -394,13 +324,14 @@
                 z-index: 1;
             }
 
-            /* Input field */
+            /* Input field - secure appearance */
             textarea {
                 width: 100%;
                 padding: 1rem;
-                background: rgba(10, 22, 40, 0.8);
-                border: 1px solid rgba(0, 240, 255, 0.3);
-                color: #e0f2fe;
+                background: rgba(15, 23, 42, 0.9);
+                border: 2px solid rgba(100, 116, 139, 0.4);
+                border-radius: 8px;
+                color: #e2e8f0;
                 font-family: "JetBrains Mono", monospace;
                 font-size: 0.875rem;
                 resize: none;
@@ -409,28 +340,30 @@
 
             textarea:focus {
                 outline: none;
-                border-color: var(--electric-cyan);
-                box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-                background: rgba(10, 22, 40, 0.95);
+                border-color: var(--trust-blue);
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                background: rgba(15, 23, 42, 0.95);
             }
 
             textarea::placeholder {
-                color: rgba(224, 242, 254, 0.3);
+                color: rgba(226, 232, 240, 0.3);
             }
 
-            /* Message notification - top banner style */
+            /* Message notification - professional */
             .message-banner {
                 background: linear-gradient(
                     90deg,
-                    rgba(0, 240, 255, 0.15),
-                    rgba(168, 85, 247, 0.15)
+                    rgba(16, 185, 129, 0.1),
+                    rgba(16, 185, 129, 0.05)
                 );
-                border: 1px solid rgba(0, 240, 255, 0.4);
-                border-left: 4px solid var(--electric-cyan);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                border-left: 4px solid var(--secure-green);
+                border-radius: 8px;
                 padding: 1rem 1.5rem;
                 margin-bottom: 1.5rem;
                 font-size: 0.875rem;
-                letter-spacing: 0.05em;
+                letter-spacing: 0.025em;
+                color: var(--secure-green);
                 animation: slideInTop 0.4s ease;
             }
 
@@ -445,24 +378,28 @@
                 }
             }
 
-            /* Label styling */
+            /* Label styling - professional */
             .input-label {
                 display: block;
                 font-size: 0.75rem;
                 font-weight: 600;
-                letter-spacing: 0.1em;
+                letter-spacing: 0.05em;
                 text-transform: uppercase;
-                color: var(--electric-cyan);
+                color: #94a3b8;
                 margin-bottom: 0.75rem;
             }
 
-            /* Warning text */
+            /* Warning text - clear and visible */
             .warning-text {
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 gap: 0.5rem;
                 font-size: 0.75rem;
-                color: rgba(224, 242, 254, 0.5);
+                color: var(--warning-amber);
+                background: rgba(245, 158, 11, 0.1);
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 6px;
+                padding: 0.75rem;
                 margin-top: 0.75rem;
             }
 
@@ -498,16 +435,16 @@
                 animation-delay: 0.5s;
             }
 
-            /* Stats display */
+            /* Stats display - clean */
             .stats-item {
                 font-size: 0.75rem;
-                color: rgba(224, 242, 254, 0.6);
-                letter-spacing: 0.05em;
+                color: rgba(148, 163, 184, 0.8);
+                letter-spacing: 0.025em;
             }
 
             .stats-value {
                 font-weight: 700;
-                color: var(--electric-cyan);
+                color: var(--trust-blue);
             }
 
             /* Fade in animations */
@@ -535,10 +472,82 @@
                     <p class="text-sm tracking-wider opacity-70 font-light">
                         Derive Ethereum addresses from BIP39 seed phrases
                     </p>
+                    <div class="security-badge">
+                        <svg
+                            class="w-4 h-4"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <span>CLIENT-SIDE ONLY</span>
+                    </div>
                 </div>
 
                 <!-- Input Container -->
                 <div class="input-container">
+                    <!-- Privacy Notice -->
+                    <div
+                        style="
+                            background: rgba(16, 185, 129, 0.05);
+                            border: 1px solid rgba(16, 185, 129, 0.2);
+                            border-radius: 8px;
+                            padding: 1rem;
+                            margin-bottom: 1.5rem;
+                        "
+                    >
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 0.75rem;
+                                margin-bottom: 0.5rem;
+                            "
+                        >
+                            <svg
+                                class="w-5 h-5"
+                                style="
+                                    color: var(--secure-green);
+                                    flex-shrink: 0;
+                                "
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            <h3
+                                style="
+                                    font-size: 0.875rem;
+                                    font-weight: 600;
+                                    color: var(--secure-green);
+                                    letter-spacing: 0.025em;
+                                "
+                            >
+                                PRIVACY & SECURITY
+                            </h3>
+                        </div>
+                        <p
+                            style="
+                                font-size: 0.75rem;
+                                color: rgba(226, 232, 240, 0.8);
+                                line-height: 1.5;
+                                margin-left: 2rem;
+                            "
+                        >
+                            All derivations happen locally in your browser. Your
+                            seed phrase never leaves your device and is not
+                            transmitted to any server.
+                        </p>
+                    </div>
+
                     <div
                         x-show="message.text"
                         x-text="message.text"
@@ -657,21 +666,31 @@
 
                 <div
                     x-show="addresses.length === 0"
-                    class="text-center py-20 opacity-40"
+                    class="text-center py-20"
+                    style="opacity: 0.5"
                 >
                     <svg
                         class="w-16 h-16 mx-auto mb-4"
+                        style="color: var(--trust-blue)"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="1"
+                        stroke-width="1.5"
                         viewBox="0 0 24 24"
                     >
                         <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                     </svg>
-                    <p class="text-sm tracking-wide">
+                    <p
+                        class="text-sm tracking-wide mb-2"
+                        style="color: #94a3b8"
+                    >
                         No addresses generated yet
+                    </p>
+                    <p class="text-xs" style="color: #64748b">
+                        Enter your seed phrase to begin
                     </p>
                 </div>
             </div>
@@ -715,6 +734,7 @@
                         }
 
                         try {
+                            // Create mnemonic and HD wallet from phrase
                             const mnemonic = ethers.Mnemonic.fromPhrase(phrase);
                             const hdWallet = ethers.HDNodeWallet.fromMnemonic(
                                 mnemonic,
